@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+</head>
+<body class="main-grid">
+  <script type="text/ng-template" id="form-messages">
+    <div ng-message-on="required">This field cannot be blank</div>
+    <div ng-message-on="minlength">The value for this field is too short</div>
+    <div ng-message-on="maxlength">The value for this field is too long</div>
+    ...
+  </script>
+
+  <form name="myForm" ng-submit="submitted=true">
+
+    <p>
+      <label>Email:</label>
+      <input type="email" ng-model="email" name="email" required ng-maxlength="30" />
+      <div class="error-messages"
+           ng-message="myForm.email.$error"
+           ng-message-include="form-messages">
+        <div ng-message-on="required">You did not enter an email address</div>
+        <div ng-message-on="email">Your email address is inavlid</div>
+      </div>
+    </p>
+
+    <p>
+      <label>Password:</label>
+      <input type="password" ng-model="password" name="password" required ng-maxlength="15" />
+      <div class="error-messages"
+           ng-message="myForm.password.$error"
+           ng-message-include="form-messages">
+        <div ng-message-on="required">You did not enter a valid password</div>
+      </div>
+    </p>
+
+    <input type="submit" />
+  </form>
+
+<script type="text/javascript" src="./build/angular.js"></script>
+<script type="text/javascript" src="./build/angular-messages.js"></script>
+<script type="text/javascript">
+angular.module('myApp', ['ngMessages']);
+</script>
+</body>
+</html>

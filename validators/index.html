@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<title>My Angular App</title>
+</head>
+<body>
+
+  <form name="myForm" ng-controller="FormCtrl">
+
+    <label for="postal">Postal Code:</label>
+
+    <input type="text" id="postal" ng-model="postalCode" name="myField" postal-code-validator />
+
+    <div ng-if="myForm.myField.$error.postal">You did not enter a valid postal code</div>`
+
+  </form>
+
+<script type="text/javascript" src="./angular.js"></script>
+<script type="text/javascript">
+angular.module("MyApp", [])
+  .controller("FormCtrl", ["$scope", function($scope) {
+  }])
+  .directive('postalCodeValidator', function() {
+    return {
+      require: 'ngModel',
+      link : function($scope, element ,attrs, ctrl) {
+        ctrl.$parsers.push(function(value) {
+          var regex = /[A-Z]\d[A-Z]\ ?\d[A-Z]\d/;
+          var success = regex.test(value);
+          ctrl.$setValidity('postal', success);
+          return value;
+        })
+      }
+    }
+  });
+
+</script>
+</body>
+</html>

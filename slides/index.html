@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Advanced UI, Plugins and Components in AngularJS</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/overrides.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+        <section class="title-page" data-background="./pear-mookin.svg" data-background-size="1050px" data-background-repeat="no-repeat" data-background-position="580px 80px">
+          <h1 id="super-title">
+            Advanced <span class="em2">UI</span>,
+            <span class="em4">Plugins</span> and
+            <span class="em3">Components</span> in
+            <span class="em5">AngularJS</span>
+          </h1>
+					<h3 class="fitc-logo">
+            <i></i> AngularJS Spotlight
+          </h3>
+          <div class="yom-logo-mini">
+            Matias Niemelä
+            (<span class="em">@yearofmoo</span>)
+            <div class="em2">http://www.yearofmoo.com</div>
+            <div class="em2">matias@yearofmoo.com</div>
+          </div>
+				</section>
+
+        <section class="slide-page">
+          <h1 class="em5">What are we talking about today?</h1>
+          <p class="fragment fade-in">
+            The role of the UI
+          </p>
+          <p class="fragment fade-in">
+            Making Plugins
+          </p>
+          <p class="fragment fade-in">
+            Popular UI Libraries, Tools and Plugins
+          </p>
+          <p class="fragment fade-in">
+            Debugging &amp; Testing
+          </p>
+				</section>
+
+        <section class="slide-page">
+          <h1 class="em2">The role of the UI in Angular</h1>
+          <p class="fragment fade-in">
+            The HTML Template
+          </p>
+          <p class="fragment fade-in">
+            How the scope interacts with the template
+          </p>
+          <p class="fragment fade-in">
+            Directives
+          </p>
+          <p class="fragment fade-in">
+            Animations
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">What is good UI</h1>
+          <p class="fragment fade-in">
+            Simple Template code
+          </p>
+          <p class="fragment fade-in">
+            Composeable Directives
+          </p>
+          <p class="fragment fade-in">
+            Using the right tool for the job
+          </p>
+          <p class="fragment fade-in">
+            Small / Loose controllers
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">What is bad UI</h1>
+          <p class="fragment fade-in">
+            Bad UI involves coupling
+          </p>
+          <p class="fragment fade-in">
+            Terse HTML template code
+          </p>
+          <p class="fragment fade-in">
+            Abusing the scope
+          </p>
+          <p class="fragment fade-in">
+            Fat controllers
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Be Expressive</h1>
+          <p class="fragment fade-in">
+            The UI is all about directives
+          </p>
+          <p class="fragment fade-in">
+            Directives should extend HTML
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">The Prime Directive</h1>
+          <p class="fragment fade-in">
+            Separate Data from Function
+          </p>
+          <p class="fragment fade-in">
+            Use directives as best possible
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Example Validator</h1>
+          <p class="fragment fade-in">
+            Let's create a validation example
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Isolation is the answer</h1>
+          <p class="fragment fade-in">
+            Split the code between data and function
+          </p>
+          <p class="fragment fade-in">
+            Follow this method always with code
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Tic-tac-toe</h1>
+          <p class="fragment fade-in">
+            Let's create a tic-tac-toe example
+          </p>
+        </section>
+
+        <section class="slide-page">
+<pre class="medium-code padded"><code data-trim>
+&lt;div ng-controller="TicTacToeCtrl"&gt;
+  &lt;div ng-repeat="row in rows"&gt;
+    &lt;div ng-repeat="col in row.cols"&gt;
+      {{ col }} 
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+<pre class="medium-code padded"><code data-trim>
+.controller('TicTacToeCtrl', function($scope) {
+  $scope.rows = [
+    { cols : [ 1, 2, 3 ] },
+    { cols : [ 4, 5, 6 ] },
+    { cols : [ 7, 8, 9 ] }
+  ];
+});
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Tic-tac-toe (1)</h1>
+          <p class="fragment fade-in">
+            Pro: Simple HTML Code
+          </p>
+          <p class="fragment fade-in">
+            Con: Scope data is form-fitted
+          </p>
+          <p class="fragment fade-in">
+            Con: Code is too terse
+          </p>
+          <p class="fragment fade-in">
+            Con: Unable to extend
+          </p>
+        </section>
+
+        <section class="slide-page">
+<pre class="medium-code padded"><code data-trim>
+.directive('ticTacToe', function(createMatrix) {
+  return {
+    controller : function($scope, $attrs) {
+      var rows = $scope.$eval($attrs.ticTacToe);
+      $scope.rows = createMatrix(rows);
+    },
+    template : '&lt;div ng-repeat="row in rows"&gt;' +
+               '  &lt;div ng-repeat="col in row.cols"&gt;' +
+               '    {{ col }}' +
+               '  &lt;/div&gt;' +
+               '&lt;/div&gt;'
+  }
+});
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+<pre class="big-code padded"><code data-trim>
+  &lt;div ng-controller="TicTacToeCtrl"
+     tic-tac-toe="rows"&gt;&lt;/div&gt;
+</code></pre>
+<pre class="medium-code padded"><code data-trim>
+.controller('TicTacToeCtrl', function($scope) {
+  $scope.rows = [
+    1, 2, 3,
+    4, 5, 6,
+    7, 8, 9
+  ];
+});
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Tic-tac-toe (2)</h1>
+          <p class="fragment fade-in">
+            Pro: Compact HTML Code
+          </p>
+          <p class="fragment fade-in">
+            Con: Mix of JS and HTML code
+          </p>
+          <p class="fragment fade-in">
+            Con: No real benefit
+          </p>
+        </section>
+
+        <section class="slide-page">
+<pre class="big-code padded"><code data-trim>
+&lt;div ng-controller="TicTacToeCtrl"
+     tic-tac-toe="9"&gt;
+
+  {{ cells[index] }}
+
+&lt;/div&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+<pre class="medium-code padded"><code data-trim>
+.controller('TicTacToeCtrl', function($scope) {
+  $scope.cells = [
+    1, 2, 3,
+    4, 5, 6,
+    7, 8, 9
+  ];
+});
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+<pre class="ok-code full padded"><code data-trim>
+.directive('ticTacToe', function() {
+  return {
+    transclude : 'element',
+    terminal : true,
+    link : function($scope, $element, $attrs, ctrl, transcludeFn) {
+      var cells = $scope.$eval($attrs.ticTacToe);
+      var anchor = $element;
+      for(var i=0;i&lt;cells.length;i++) {
+        var scope = $scope.$new();
+        scope.index = i;
+        transcludeFn(scope, function(element) {
+          element.after(anchor);
+          anchor = element;
+        });
+      }
+    },
+  };
+});
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Tic-tac-toe (3)</h1>
+          <p class="fragment fade-in">
+            Pro: High-level language
+          </p>
+          <p class="fragment fade-in">
+            Pro: Simple Scope Data
+          </p>
+          <p class="fragment fade-in">
+            Con: Complexity of the directive
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Moving On...</h1>
+          <p class="fragment fade-in">
+            Separate Construction from Data
+          </p>
+          <p class="fragment fade-in">
+            Isolate the construction into a directive
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Keep yourself up to date</h1>
+          <p class="fragment fade-in">
+            Angular keeps improving
+          </p>
+          <p class="fragment fade-in">
+            Use the most modern features
+          </p>
+          <p class="fragment fade-in">
+            Tutorials may be expired
+          </p>
+          <p class="fragment fade-in">
+            Patterns emerge
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Embrace the Template</h1>
+          <p class="fragment fade-in">
+            Use the template to drive communication
+          </p>
+          <p class="fragment fade-in">
+            Use controllerAs
+          </p>
+          <p class="fragment fade-in">
+            Or use directives with controllers
+          </p>
+        </section>
+
+
+        <section class="slide-page">
+          <h1 class="em2">ControllerAs</h1>
+<pre class="medium-code padded"><code data-trim>
+.controller('CommentCtrl', function() {
+  this.content = comment.content;
+  this.date = comment.date;
+  this.destroy = function() {
+    //remove the comment
+  }
+});
+</code></pre>
+<pre class="medium-code padded"><code data-trim>
+&lt;div ng-controller="CommentCtrl as comment"&gt;&lt;/div&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Directive Controllers</h1>
+<pre class="ok-code padded"><code data-trim>
+.directive('commentCtrl', function() {
+  return {
+    controller : function($scope, $attrs) {
+      this.content = comment.content;
+      this.date = comment.date;
+      this.destroy = function() {
+        //remove the comment
+      }
+      $scope[$attrs.as] = this;
+    }   
+  }
+});
+</code></pre>
+<pre class="medium-code padded"><code data-trim>
+&lt;div comment-ctrl as="comment"&gt;&lt;/div&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Multi Level Form Example</h1>
+          <p class="fragment fade-in">
+            Let's create a multi-level form example
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Example 1...</h1>
+<pre class="medium-code padded"><code data-trim>
+.controller('FormCtrl', function($scope) {
+
+  //One Big Fat Ctrl
+
+})
+</code></pre>
+<pre class="medium-code padded"><code data-trim>
+&lt;form ng-controller="FormCtrl"&gt;
+  <input ng-model="..." />
+  ...
+&lt;/form&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Multi Level Form (1)</h1>
+          <p class="fragment fade-in">
+            Pro: Simple HTML
+          </p>
+          <p class="fragment fade-in">
+            Con: Fat Controllers
+          </p>
+          <p class="fragment fade-in">
+            Con: Breaks the Law of Demeter
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Example 2...</h1>
+<pre class="medium-code padded"><code data-trim>
+.controller('FormCtrl', function($scope) {
+
+})
+
+.controller('SubFormCtrl', function($scope, $attrs) {
+  var color = $scope.$eval($attrs.color);
+})
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Example 2...</h1>
+<pre class="medium-code padded"><code data-trim>
+&lt;form ng-controller="FormCtrl"&gt;
+  ...
+  &lt;div ng-controller="ColorFormCtrl" color="color"&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Multi Level Form (2)</h1>
+          <p class="fragment fade-in">
+            Pro: More Isolation
+          </p>
+          <p class="fragment fade-in">
+            Con: Strict Inheritance
+          </p>
+          <p class="fragment fade-in">
+            Con: Weird naming conventions
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Example 3...</h1>
+<pre class="medium-code padded"><code data-trim>
+&lt;form ng-controller="FormCtrl as form"&gt;
+  ...
+  &lt;div ng-controller="ColorFormCtrl as colorForm" color="color"&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Multi Level Form (3)</h1>
+          <p class="fragment fade-in">
+            Pro: Communication in the template
+          </p>
+          <p class="fragment fade-in">
+            Con: Verbose Controller Attributes
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Example 4...</h1>
+<pre class="medium-code padded"><code data-trim>
+&lt;form form-ctrl as="form"&gt;
+  ...
+  &lt;div color-form-ctrl="color" as="colorForm"&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Multi Level Form (4)</h1>
+          <p class="fragment fade-in">
+            Pro: Inheritance in the template and directive
+          </p>
+          <p class="fragment fade-in">
+            Con: Obscure JS code
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em2">Directive/Controller Hybrids</h1>
+          <p class="fragment fade-in">
+            best level of flexibility
+          </p>
+          <p class="fragment fade-in">
+            access to controller and DOM
+          </p>
+          <p class="fragment fade-in">
+            isolation of the controller
+          </p>
+          <p class="fragment fade-in">
+            requiring other controllers
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">Making a Plugin</h1>
+          <p class="fragment fade-in">
+            Use a proper naming convention
+          </p>
+          <p class="fragment fade-in">
+            Store everything inside of one module
+          </p>
+          <p class="fragment fade-in">
+            Expose all template code as custom directives
+          </p>
+          <p class="fragment fade-in">
+            CSS classes/code should have a naming convention as well
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">File Structure</h1>
+<pre class="big-code padded"><code data-trim>
+my-plugin/
+  plugin.html
+  plugin.css
+  plugin.js
+</code></pre>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">Where to save it</h1>
+          <p class="fragment fade-in">
+            Bower
+          </p>
+          <p class="fragment fade-in">
+            ngmodules.org
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">Popular Tools</h1>
+          <p class="fragment fade-in">
+            UI Libraries
+          </p>
+          <p class="fragment fade-in">
+            Breeze &amp; Restangular
+          </p>
+          <p class="fragment fade-in">
+            RequireJS &amp; Browserify
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">UI Libraries</h1>
+          <p class="fragment fade-in">
+            AngularUI
+          </p>
+          <p class="fragment fade-in">
+            Angular-Strap
+          </p>
+          <p class="fragment fade-in">
+            KendoUI
+          </p>
+          <p class="fragment fade-in">
+            Difficult to find something good
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">AngularUI (ui and bootstrap)</h1>
+          <p class="fragment fade-in">
+            Updated Frequently
+          </p>
+          <p class="fragment fade-in">
+            Native-Angular code
+          </p>
+          <p class="fragment fade-in">
+            Might not be compatible with non-angular code
+          </p>
+          <p class="fragment fade-in">
+            Uses its own animation code
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">Angular-Strap</h1>
+          <p class="fragment fade-in">
+            Acts as a passthrough with Angular
+          </p>
+          <p class="fragment fade-in">
+            Bootstrap is independent
+          </p>
+          <p class="fragment fade-in">
+            Uses ngAnimate
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em4">KendoUI</h1>
+          <p class="fragment fade-in">
+            Pricing model
+          </p>
+          <p class="fragment fade-in">
+            Mobile Support
+          </p>
+          <p class="fragment fade-in">
+            Wider selection of widgets
+          </p>
+          <p class="fragment fade-in">
+            Angular integration mixed
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em5">Debugging Components</h1>
+          <p class="fragment fade-in">
+            Use <span class='em'>debugger</span> or <em>breakpoints</em>
+          </p>
+          <p class="fragment fade-in">
+            Hope into the console
+          </p>
+          <p class="fragment fade-in">
+            Use <em>angular.element()</em> to gain access
+          </p>
+        </section>
+
+        <section class="slide-page">
+          <h1 class="em5">Testing Components</h1>
+          <p class="fragment fade-in">
+            Easy to test code when the structure is separate
+          </p>
+          <p class="fragment fade-in">
+            Reduce the overall template footprint
+          </p>
+          <p class="fragment fade-in">
+            Karma has some tricks you can use
+          </p>
+        </section>
+
+        <section class="slide-page" data-background="/css/19.svg" data-background-size="800px" data-background-repeat="no-repeat" data-background-position="110% 20%">
+          <h1>
+            Thank you
+          </h1>
+          <h3>
+            It was a pleasure
+          </h3>
+          <div class="author">
+            Matias Niemelä
+            <div class="em2">matias@yearofmoo.com</div>
+            <div class="em">@yearofmoo</div>
+          </div>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: false,
+        autoCenter : false,
+        width: '100%',
+        backgroundTransition: 'none', // default/none/slide/concave/convex/zoom
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

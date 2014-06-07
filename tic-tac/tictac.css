@@ -1,0 +1,15 @@
+body {
+  width:800px;
+}
+.tic-tac-cell,
+.tic-tac .cell {
+  width:200px;
+  float:left;
+  border:2px solid #ddd;
+  margin:20px;
+  text-align:center;
+  vertical-align:middle;
+  line-height:200px;
+  font-size:50px;
+  height:200px;
+}

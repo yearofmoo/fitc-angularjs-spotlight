@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<title>My Angular App</title>
+</head>
+<body>
+
+  <form form-ctrl as="form">
+    <button ng-click="form.newColor()">New Color</button>
+
+    <div ng-repeat="c in form.colors" form-color-ctrl="c" as="colorForm">
+      <label>Color {{ $index + 1 }}</label>:
+      <select ng-model="colorForm.color.type" ng-change="colorForm.updatePlaceholder(colorForm.color.type)">
+        <option value="hex">HEX</option>
+        <option value="rgb">RGB</option>
+        <option value="color">Color</option>
+      </select>
+      <input type="text" ng-model="colorForm.color.value" placeholder="{{ colorForm.placeholder }}" />
+      <button ng-click="colorForm.remove()">x</button>
+    </div>
+
+    <hr />
+    <input type="submit" />
+  </form>
+
+<script type="text/javascript" src="https://code.angularjs.org/1.3.0-beta.9/angular.js"></script>
+<script type="text/javascript">
+angular.module("MyApp", [])
+  .directive("formColorCtrl", function() {
+      return {
+        require : ['formColorCtrl', '^formCtrl'],
+        controller : function($scope, $attrs) {
+            var color = $scope.$eval($attrs.formColorCtrl);
+            var placeholders = {
+              hex : 'Some Hex Color',
+              rgb : 'Reg Green Blue',
+              color : 'Enter a color'
+            };
+
+            this.color = color;
+
+            this.updatePlaceholder = function(type) {
+              this.placeholder = placeholders[type];
+            };
+
+            this.updatePlaceholder('hex');
+            $scope[$attrs.as] = this;
+        },
+        link : function($scope, element, attrs, ctrls) {
+           var colorCtrl = ctrls[0];
+           var formCtrl = ctrls[1];
+           colorCtrl.remove = function() {
+             formCtrl.remove(colorCtrl.color);
+           }
+        }
+      };
+  })
+  .directive("formCtrl", function() {
+      return {
+        controller : function($scope, $attrs) {
+          this.newColor = function() {
+            this.colors.push({});
+          }
+          this.remove = function(color) {
+            var index = this.colors.indexOf(color);
+            this.colors.splice(index, 1);
+          }
+          this.colors = [];
+          $scope[$attrs.as] = this;
+        }
+      }
+  });
+</script>
+</body>
+</html>
+

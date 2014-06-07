@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<title>My Angular App</title>
+</head>
+<body>
+
+  <form name="myForm" ng-controller="FormCtrl">
+
+    <label>Postal Code</label>
+    <input type="text" ng-model="postalCode" name="postalCode" required ng-minlength="6" postal-code-validator />
+
+    <div ng-messages="myForm.postalCode.$error">
+      <div ng-message="required">You did not enter a postal code</div>
+      <div ng-message="minlength">Your postal code is too short</div>
+      <div ng-message="postal">Your postal code is invalid</div>
+      <div special-message>...</div>
+    </div>
+
+  </form>
+
+<script type="text/javascript" src="./angular.js"></script>
+<script type="text/javascript" src="./angular-messages.js"></script>
+<script type="text/javascript">
+angular.module("MyApp", ["ngMessages"])
+  .controller("FormCtrl", ["$scope", function($scope) {
+    //...
+  }])
+  .directive('specialMessage', function() {
+      return {
+        require : '^ngMessages',
+        link : function($scope, element, attrs, ctrl) {
+          console.log(ctrl);
+        }
+      }
+  })
+  .directive('postalCodeValidator', function() {
+    return {
+      require: 'ngModel',
+      link : function($scope, element ,attrs, ctrl) {
+        ctrl.$parsers.push(function(value) {
+          var regex = /[A-Z]\d[A-Z]\ ?\d[A-Z]\d/;
+          var success = regex.test(value);
+          ctrl.$setValidity('postal', success);
+          return value;
+        })
+      }
+    }
+  });
+</script>
+</body>
+</html>

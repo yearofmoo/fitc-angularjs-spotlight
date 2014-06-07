@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<title>My Angular App</title>
+</head>
+<body>
+
+<div expand="5">
+  {{ index }}
+</div>
+
+<script type="text/javascript" src="./angular.js"></script>
+<script type="text/javascript" src="./plugin.js"></script>
+<script type="text/javascript">
+angular.module("MyApp", ["Plugin"])
+</script>
+</body>
+</html>

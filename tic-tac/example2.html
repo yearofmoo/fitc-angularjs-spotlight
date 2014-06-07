@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<title>My Angular App</title>
+<link rel="stylesheet" type="text/css" href="./tictac.css" />
+</head>
+<body>
+
+  <div ng-controller="TicTacToeCtrl"
+       class="tic-tac"
+       tic-tac-toe="rows">
+  </div>
+
+<script type="text/javascript" src="https://code.angularjs.org/1.3.0-beta.9/angular.js"></script>
+<script type="text/javascript">
+angular.module("MyApp", [])
+.value('createMatrix', function(cells) {
+  var matrix = [];
+  for(var i=0, j=0;i<cells.length;i++) {
+    if(i > 0 && i % 3 == 0) j++;
+    matrix[j] = matrix[j] || [];
+    matrix[j].push(cells[i]);
+  }
+  return matrix;
+})
+.controller('TicTacToeCtrl', function($scope) {
+  $scope.rows = [
+    1, 2, 3,
+    4, 5, 6,
+    7, 8, 9
+  ];
+})
+.directive('ticTacToe', function(createMatrix) {
+  return {
+    controller : function($scope, $attrs) {
+      var rows = $scope.$eval($attrs.ticTacToe);
+      $scope.rows = createMatrix(rows);
+    },
+    template : '<div ng-repeat="row in rows" class="row">' +
+               '  <div ng-repeat="col in row" class="cell">' +
+               '    {{ col }}' +
+               '  </div>' +
+               '</div>'
+  }
+});
+</script>
+</body>
+</html>

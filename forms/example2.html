@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<title>My Angular App</title>
+</head>
+<body>
+
+  <form ng-controller="FormCtrl">
+    <button ng-click="newColor()">New Color</button>
+
+    <div ng-repeat="color in colors" ng-controller="FormColorCtrl" color="color">
+      <label>Color {{ $index + 1 }}</label>:
+      <select ng-model="color.type" ng-change="updatePlaceholder(color.type)">
+        <option value="hex">HEX</option>
+        <option value="rgb">RGB</option>
+        <option value="color">Color</option>
+      </select>
+      <input type="text" ng-model="color.value" placeholder="{{ placeholder }}" />
+      <button ng-click="remove(color)">x</button>
+    </div>
+
+    <hr />
+    <input type="submit" />
+  </form>
+
+<script type="text/javascript" src="https://code.angularjs.org/1.3.0-beta.9/angular.js"></script>
+<script type="text/javascript">
+angular.module("MyApp", [])
+  .controller("FormColorCtrl", function($scope, $attrs) {
+      var color = $scope.$eval($attrs.color);
+      var placeholders = {
+        hex : 'Some Hex Color',
+        rgb : 'Reg Green Blue',
+        color : 'Enter a color'
+      };
+      $scope.updatePlaceholder = function(type) {
+        $scope.placeholder = placeholders[type];
+      };
+  })
+  .controller("FormCtrl", function($scope) {
+      $scope.newColor = function() {
+        $scope.colors.push({});
+      }
+      $scope.remove = function(color) {
+        var index = $scope.colors.indexOf(color);
+        $scope.colors.splice(index, 1);
+      }
+      $scope.colors = [];
+  });
+</script>
+</body>
+</html>
+
